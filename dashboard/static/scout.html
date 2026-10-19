@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pearl GPU Monitor - Testes</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>Testes Scout</h1>
+          <p id="connection">Carregando...</p>
+        </div>
+        <nav class="top-nav">
+          <a class="rent-link" href="/">Dashboard</a>
+          <a class="rent-link search-link" href="/scout">Testes</a>
+          <a class="rent-link search-link" href="/results">Results</a>
+          <a class="rent-link search-link" href="/prime">Prime</a>
+          <a class="rent-link search-link" href="/config">Config</a>
+        </nav>
+      </header>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Controle automatico</h2>
+            <p id="scoutSummary"></p>
+          </div>
+          <div>
+            <button class="action-button" id="resumeScout">Ativar auto</button>
+            <button class="action-button quiet" id="pauseScout">Pausar</button>
+            <button class="action-button danger" id="clearScoutHistory">Reset limpo</button>
+          </div>
+        </div>
+        <form class="settings-form" id="settingsForm">
+          <label>
+            <span>Testes paralelos</span>
+            <input id="maxParallelTests" type="number" min="1" max="50" step="1" />
+          </label>
+          <label>
+            <span>Min lucro/h</span>
+            <input id="minProfitHr" type="number" min="0" max="20" step="0.01" />
+          </label>
+          <label>
+            <span>Min por pool</span>
+            <input id="testMinutes" type="number" min="5" max="180" step="1" />
+          </label>
+          <label>
+            <span>Sem worker min</span>
+            <input id="workerTimeoutMinutes" type="number" min="1" max="60" step="1" />
+          </label>
+          <label>
+            <span>Max $/h</span>
+            <input id="maxPriceHr" type="number" min="0.01" max="50" step="0.01" />
+          </label>
+          <span id="settingsSaved"></span>
+        </form>
+        <div class="operation-grid" id="scoutCards"></div>
+      </section>
+
+      <section class="panel operation">
+        <div class="panel-head">
+          <div>
+            <h2>Radar Scout / Reteste</h2>
+            <p id="queueSummary">Sniper automatico Vast; Clore entra por clique manual</p>
+          </div>
+        </div>
+        <div class="table-wrap compact scout-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Ask</th>
+                <th>GPU</th>
+                <th>Qtd</th>
+                <th>Preco/h</th>
+                <th>Lucro prev/h</th>
+                <th>ROI</th>
+                <th>Score</th>
+                <th>PCIe</th>
+                <th>Rede</th>
+                <th>Rel</th>
+                <th>Host</th>
+                <th>Machine</th>
+                <th>Novo</th>
+                <th>Visto 1x</th>
+                <th>Ult. visto</th>
+                <th>Tipo</th>
+                <th>Re-teste</th>
+                <th>Tentativas</th>
+                <th>Prox retry</th>
+                <th>Motivo</th>
+              </tr>
+            </thead>
+            <tbody id="queueRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Iniciar teste manual</h2>
+            <p>Use Oferta ID: Ask para Vast ou Server ID para Clore</p>
+          </div>
+          <form class="inline-form" id="startForm">
+            <select id="manualProvider">
+              <option value="vastai">Vast</option>
+              <option value="clore">Clore</option>
+            </select>
+            <select id="manualStrategy">
+              <option value="akoya">Akoya</option>
+              <option value="alphamine">AlphaMine</option>
+            </select>
+            <input id="askId" inputmode="numeric" placeholder="Oferta ID" />
+            <button class="action-button" type="submit">Testar</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="panel operation">
+        <div class="panel-head">
+          <div>
+            <h2>Testes ativos</h2>
+            <p>Janela padrao de 30 min por pool</p>
+          </div>
+        </div>
+        <div class="table-wrap compact scout-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Teste</th>
+                <th>Provider</th>
+                <th>Oferta</th>
+                <th>Instancia/Ordem</th>
+                <th>Origem</th>
+                <th>Pool</th>
+                <th>GPU</th>
+                <th>CUDA</th>
+                <th>PCIe</th>
+                <th>Rel</th>
+                <th>Riscos</th>
+                <th>Restante</th>
+                <th>Hash real</th>
+                <th>Esperado</th>
+                <th>Ratio</th>
+                <th>Lucro/h</th>
+                <th>Custo acumulado</th>
+                <th>Proxima acao</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="activeTests"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>RESULTADOS</h2>
+            <p>Comparativo A/B por instancia, maquina e tipo de placa</p>
+          </div>
+        </div>
+        <div class="table-wrap scout-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Fim</th>
+                <th>Provider</th>
+                <th>Oferta</th>
+                <th>Instancia/Ordem</th>
+                <th>Origem</th>
+                <th>GPU</th>
+                <th>Qtd</th>
+                <th>CUDA</th>
+                <th>PCIe</th>
+                <th>Rel</th>
+                <th>Riscos</th>
+                <th>Host</th>
+                <th>Machine</th>
+                <th>Custo/h</th>
+                <th>Akoya hash</th>
+                <th>Akoya lucro/h</th>
+                <th>Akoya ratio</th>
+                <th>Alpha hash</th>
+                <th>Alpha lucro/h</th>
+                <th>Alpha ratio</th>
+                <th>Dif</th>
+                <th>Melhor</th>
+                <th>Decisao</th>
+                <th>Re-teste?</th>
+                <th>Motivo re-teste</th>
+                <th>Historico anterior</th>
+                <th>Melhoria</th>
+                <th>Motivo</th>
+              </tr>
+            </thead>
+            <tbody id="historyRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script src="/static/scout.js?v=20260529-auto-log"></script>
+  </body>
+</html>

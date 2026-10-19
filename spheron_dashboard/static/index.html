@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Spheron Control</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>Spheron Control</h1>
+          <p id="subtitle">H100 SXM5 x1 cockpit</p>
+        </div>
+        <nav class="top-nav">
+          <a href="/">Spheron</a>
+          <a href="/books">Books PRL</a>
+        </nav>
+        <div class="status-pill" id="refreshStatus">carregando</div>
+      </header>
+
+      <section class="metrics" id="metrics"></section>
+
+      <section class="controls">
+        <form id="configForm">
+          <label>
+            <span>Criação</span>
+            <button class="toggle" type="button" id="createToggle">...</button>
+          </label>
+          <label>
+            <span>GPUs online alvo</span>
+            <input name="desired_online_gpus" type="number" min="0" step="1" />
+          </label>
+          <label>
+            <span>IDs ativos máximo</span>
+            <input name="global_active_limit" type="number" min="1" step="1" />
+          </label>
+          <label>
+            <span>SSH paralelo</span>
+            <input name="ssh_parallel" type="number" min="1" step="1" />
+          </label>
+          <label>
+            <span>Delay loop (s)</span>
+            <input name="create_interval_seconds" type="number" min="5" step="1" />
+          </label>
+          <label>
+            <span>Preço máx ($/h)</span>
+            <input name="max_price_usd_hr" type="number" min="0" step="0.001" />
+          </label>
+          <label>
+            <span>Alerta crédito</span>
+            <input name="low_credits_threshold" type="number" min="0" step="0.01" />
+          </label>
+          <label>
+            <span>Auto destroy ruim</span>
+            <select name="auto_destroy_bad_enabled">
+              <option value="true">ligado</option>
+              <option value="false">pausado</option>
+            </select>
+          </label>
+          <label>
+            <span>Hash min TH/s</span>
+            <input name="bad_hash_min_ths" type="number" min="0" step="1" />
+          </label>
+          <label>
+            <span>Grace ruim (min)</span>
+            <input name="bad_hash_grace_minutes" type="number" min="0" step="1" />
+          </label>
+          <label>
+            <span>Samples ruins</span>
+            <input name="bad_hash_samples_required" type="number" min="1" step="1" />
+          </label>
+          <button class="save" type="submit">Salvar config viva</button>
+        </form>
+      </section>
+
+      <section class="queue">
+        <div>
+          <h2>Não alugou ainda</h2>
+          <p id="gapText">...</p>
+        </div>
+        <div>
+          <h2>Fonte Akoya</h2>
+          <p id="akoyaText">...</p>
+        </div>
+      </section>
+
+      <section class="table-wrap">
+        <div class="table-head">
+          <h2>Deployments</h2>
+          <div id="tableCount"></div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Grupo</th>
+              <th>Worker</th>
+              <th>GPU</th>
+              <th>Spheron</th>
+              <th>SSH</th>
+              <th>Akoya</th>
+              <th>Hash</th>
+              <th>Receita</th>
+              <th>Custo</th>
+              <th>Lucro</th>
+              <th>Horas</th>
+              <th>Total usage</th>
+              <th>Total ganho</th>
+              <th>Total saldo</th>
+              <th>IP</th>
+              <th>Erro</th>
+            </tr>
+          </thead>
+          <tbody id="deployments"></tbody>
+        </table>
+      </section>
+    </main>
+    <script src="/static/app.js"></script>
+  </body>
+</html>

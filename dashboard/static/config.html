@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pearl GPU Monitor - Config</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>Config</h1>
+          <p id="connection">Carregando...</p>
+        </div>
+        <nav class="top-nav">
+          <a class="rent-link" href="/">Dashboard</a>
+          <a class="rent-link search-link" href="/scout">Testes</a>
+          <a class="rent-link search-link" href="/results">Results</a>
+          <a class="rent-link search-link" href="/prime">Prime</a>
+          <a class="rent-link search-link" href="/config">Config</a>
+        </nav>
+      </header>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Templates e pools</h2>
+            <p>Valores atuais lidos pelo container do dashboard</p>
+          </div>
+        </div>
+        <div class="operation-grid" id="configCards"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Custos fixos por worker</h2>
+            <p id="fixedCostSummary">Custo USD/h usado quando o monitor nao sabe o provedor</p>
+          </div>
+        </div>
+        <form class="settings-form" id="fixedCostForm">
+          <label>
+            Worker
+            <input id="fixedWorkerName" value="spheron-a4000-001" />
+          </label>
+          <label>
+            Provider
+            <input id="fixedProvider" value="Spheron" />
+          </label>
+          <label>
+            Custo $/h
+            <input id="fixedCostHr" type="number" min="0.0001" step="0.0001" value="0.17" />
+          </label>
+          <label>
+            Ativo
+            <input id="fixedEnabled" type="checkbox" checked />
+          </label>
+          <label>
+            Nota
+            <input id="fixedNote" value="custo fixo manual" />
+          </label>
+          <button class="action-button" type="submit">Salvar custo fixo</button>
+          <span id="fixedSaved"></span>
+        </form>
+        <div class="table-wrap compact">
+          <table>
+            <thead>
+              <tr>
+                <th>Ativo</th>
+                <th>Worker</th>
+                <th>Provider</th>
+                <th>Custo/h</th>
+                <th>Nota</th>
+                <th>Atualizado</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="fixedCostRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Triggers Vast</h2>
+            <p id="triggerSummary">Somente Vast.ai; ofertas aprovadas entram no Scout</p>
+          </div>
+        </div>
+        <form class="settings-form" id="triggerForm">
+          <label>
+            Nome
+            <input id="triggerName" value="Comprar H100 SXM" />
+          </label>
+          <label>
+            GPU Vast
+            <input id="triggerGpu" value="H100 SXM" list="vastGpuNames" />
+            <datalist id="vastGpuNames">
+              <option value="H100 SXM"></option>
+              <option value="H100 PCIe"></option>
+              <option value="H100 NVL"></option>
+            </datalist>
+          </label>
+          <label>
+            Qtd GPU
+            <input id="triggerGpuCount" type="number" min="1" step="1" value="1" />
+          </label>
+          <label>
+            Max $/h
+            <input id="triggerMaxPrice" type="number" min="0.01" step="0.01" value="3.58" />
+          </label>
+          <label>
+            Ativo
+            <input id="triggerEnabled" type="checkbox" checked />
+          </label>
+          <button class="action-button" type="submit">Salvar trigger</button>
+          <span id="triggerSaved"></span>
+        </form>
+        <div class="table-wrap compact">
+          <table>
+            <thead>
+              <tr>
+                <th>Ativo</th>
+                <th>Nome</th>
+                <th>GPU</th>
+                <th>Qtd</th>
+                <th>Max $/h</th>
+                <th>Matches</th>
+                <th>Ultima tentativa</th>
+                <th>Status</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="triggerRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Blacklist Vast</h2>
+            <p id="blacklistSummary"></p>
+          </div>
+        </div>
+        <div class="table-wrap compact">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>GPU</th>
+                <th>Machine</th>
+                <th>Host</th>
+                <th>Ask</th>
+                <th>Instancia</th>
+                <th>Motivo</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="blacklistRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script src="/static/config.js?v=20260529-fixed-costs"></script>
+  </body>
+</html>

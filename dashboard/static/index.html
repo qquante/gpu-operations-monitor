@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pearl GPU Monitor</title>
+    <link rel="stylesheet" href="/static/styles.css?v=20260529-clore-auto" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>Pearl GPU Monitor</h1>
+          <p id="connection">Conectando...</p>
+        </div>
+        <nav class="top-nav">
+          <a class="rent-link" href="/">Dashboard</a>
+          <a class="rent-link search-link" href="/scout">Testes</a>
+          <a class="rent-link search-link" href="/results">Results</a>
+          <a class="rent-link search-link" href="/prime">Prime</a>
+          <a class="rent-link search-link" href="/config">Config</a>
+        </nav>
+        <div class="source-strip" id="sources"></div>
+      </header>
+
+      <section class="metrics" id="network"></section>
+
+      <section class="panel vast-control">
+        <div class="panel-head">
+          <div>
+            <h2>Controle Vast</h2>
+            <p id="vastSummary"></p>
+          </div>
+        </div>
+        <div class="operation-grid" id="vastControl"></div>
+        <div class="table-wrap compact">
+          <table>
+            <thead>
+              <tr>
+                <th>Ask</th>
+                <th>Instancia</th>
+                <th>Estado</th>
+                <th>Worker</th>
+                <th>Pool</th>
+                <th>GPU</th>
+                <th>Custo/h</th>
+                <th>Teto/h</th>
+                <th>Hash real</th>
+                <th>Motivo</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="vastActions"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel vast-control">
+        <div class="panel-head">
+          <div>
+            <h2>Controle Clore</h2>
+            <p id="cloreSummary"></p>
+          </div>
+        </div>
+        <div class="operation-grid" id="cloreControl"></div>
+        <div class="table-wrap compact">
+          <table>
+            <thead>
+              <tr>
+                <th>Server</th>
+                <th>Order</th>
+                <th>Dura</th>
+                <th>Restante</th>
+                <th>Expira</th>
+                <th>Estado</th>
+                <th>Worker</th>
+                <th>Pool</th>
+                <th>GPU</th>
+                <th>Custo/h</th>
+                <th>Moeda</th>
+                <th>Hash real</th>
+                <th>Imagem</th>
+                <th>Motivo / erro</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="cloreActions"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel operation">
+        <div class="panel-head">
+          <div>
+            <h2>SNIPPERS</h2>
+            <p id="snipersSummary"></p>
+          </div>
+        </div>
+        <div class="operation-grid" id="snipersCards"></div>
+        <div class="table-wrap compact">
+          <table>
+            <thead>
+              <tr>
+                <th>Ask</th>
+                <th>Instancia</th>
+                <th>Status</th>
+                <th>GPU</th>
+                <th>Host</th>
+                <th>Machine</th>
+                <th>Pool atual</th>
+                <th>Custo/h</th>
+                <th>Akoya lucro/h</th>
+                <th>Alpha lucro/h</th>
+                <th>Melhor</th>
+                <th>Hash atual</th>
+                <th>Lucro atual</th>
+                <th>Visto 1x</th>
+                <th>Snipado</th>
+                <th>Ult. visto</th>
+                <th>Decisao</th>
+                <th>Motivo</th>
+              </tr>
+            </thead>
+            <tbody id="snipersRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel operation">
+        <div class="panel-head">
+          <h2>Minha Operacao - Pools</h2>
+          <span id="operationStatus"></span>
+        </div>
+        <div class="operation-grid" id="operation"></div>
+        <div class="table-wrap compact">
+          <table>
+            <thead>
+              <tr>
+                <th>Worker</th>
+                <th>Pool</th>
+                <th>Provider</th>
+                <th>Oferta</th>
+                <th>Instancia/Ordem</th>
+                <th>GPU</th>
+                <th>Status</th>
+                <th>Hash</th>
+                <th>Live</th>
+                <th>1h</th>
+                <th>24h</th>
+                <th>Diff</th>
+                <th>Receita/h</th>
+                <th>Receita/dia</th>
+                <th>Custo/h</th>
+                <th>Custo/dia</th>
+                <th>Lucro/h</th>
+                <th>Lucro/dia</th>
+                <th>Riscos</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="workers"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel operation">
+        <div class="panel-head">
+          <div>
+            <h2>Comparativo de Pools / Updates</h2>
+            <p id="akoyaUpdatesSummary"></p>
+          </div>
+        </div>
+        <div class="table-wrap compact">
+          <table>
+            <thead>
+              <tr>
+                <th>Ask</th>
+                <th>Instancia</th>
+                <th>Worker</th>
+                <th>GPU</th>
+                <th>Pool antes</th>
+                <th>Pool agora</th>
+                <th>Antes</th>
+                <th>Agora</th>
+                <th>Delta</th>
+                <th>Delta %</th>
+                <th>Lucro/h antes</th>
+                <th>Lucro/h agora</th>
+                <th>Delta lucro/h</th>
+                <th>Atualizado</th>
+                <th>Imagem alvo</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="akoyaUpdates"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Decisao agora</h2>
+            <p id="summary"></p>
+          </div>
+          <div class="legend">
+            <span class="dot green"></span>verde
+            <span class="dot yellow"></span>amarelo
+            <span class="dot alert"></span>alerta
+            <span class="dot red"></span>vermelho
+            <span class="dot gray"></span>cinza
+          </div>
+        </div>
+        <div class="decision-toolbar">
+          <div class="toolbar-group">
+            <span>Auto Clore</span>
+            <button class="action-button quiet" id="cloreAutoToggle" type="button">AUTOMATICO CLORE OFF</button>
+            <small id="cloreAutoStatus">fila 0 | cooldown 0</small>
+          </div>
+          <div class="toolbar-group">
+            <span>Plataforma</span>
+            <div class="segmented" id="providerFilters"></div>
+          </div>
+          <div class="toolbar-group">
+            <span>Decisao</span>
+            <div class="segmented" id="decisionFilters"></div>
+          </div>
+          <label class="toolbar-field">
+            <span>Ordenar</span>
+            <select id="opportunitySort">
+              <option value="profit_desc">Lucro maior</option>
+              <option value="roi_desc">ROI maior</option>
+              <option value="cost_asc">Custo menor</option>
+              <option value="hash_desc">Hash maior</option>
+            </select>
+          </label>
+          <label class="toolbar-field">
+            <span>GPU</span>
+            <select id="gpuFilter"></select>
+          </label>
+          <label class="toolbar-field search-field">
+            <span>Buscar</span>
+            <input id="opportunitySearch" type="search" placeholder="GPU, pais, ID..." />
+          </label>
+        </div>
+        <div class="operation-grid calc-grid" id="decisionCalcCards"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-sort-key="decision">Decisao</th>
+                <th data-sort-key="platform">Plataforma</th>
+                <th data-sort-key="id">ID</th>
+                <th>Controle</th>
+                <th>Abrir</th>
+                <th>Busca GPU</th>
+                <th data-sort-key="gpu">GPU</th>
+                <th data-sort-key="gpu_count">Qtd</th>
+                <th data-sort-key="pool">Pool</th>
+                <th data-sort-key="hashrate_ths">TH/s</th>
+                <th data-sort-key="history_seen">Ja pegou?</th>
+                <th data-sort-key="history_count">Pegas</th>
+                <th data-sort-key="history_avg_ths">TH/s real med.</th>
+                <th data-sort-key="revenue_usd_hr">Receita/h</th>
+                <th data-sort-key="revenue_usd_day">Receita/dia</th>
+                <th data-sort-key="price_usd_hr">Custo/h</th>
+                <th data-sort-key="max_safe_price_usd_hr">Teto verde/h</th>
+                <th data-sort-key="cost_usd_day">Custo/dia</th>
+                <th data-sort-key="profit_usd_hr">Lucro/h</th>
+                <th data-sort-key="profit_usd_day">Lucro/dia</th>
+                <th data-sort-key="roi_pct">ROI</th>
+                <th>Calculo</th>
+                <th>Worker</th>
+                <th>CUDA</th>
+                <th>PCIe</th>
+                <th data-sort-key="reliability">Rel.</th>
+                <th data-sort-key="country">Pais</th>
+                <th>Riscos</th>
+              </tr>
+            </thead>
+            <tbody id="opportunities"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Por placa</h2>
+            <p>Resumo agregado das oportunidades disponiveis</p>
+          </div>
+        </div>
+        <div class="table-wrap gpu-summary">
+          <table>
+            <thead>
+              <tr>
+                <th>GPU</th>
+                <th>Total</th>
+                <th>Verdes</th>
+                <th>Margem</th>
+                <th>Risco</th>
+                <th>Min custo/h</th>
+                <th>Max custo/h GPU lucro</th>
+                <th>Teto verde/h GPU</th>
+                <th>Max custo/dia GPU lucro</th>
+                <th>Melhor lucro/h</th>
+                <th>Melhor lucro/dia</th>
+                <th>Melhor ROI</th>
+                <th>Melhor oferta</th>
+                <th>Busca GPU</th>
+                <th>Pool</th>
+                <th>TH/s oferta</th>
+              </tr>
+            </thead>
+            <tbody id="gpuSummary"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script src="/static/app.js?v=20260529-clore-auto"></script>
+  </body>
+</html>

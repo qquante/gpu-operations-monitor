@@ -1,0 +1,210 @@
+version: "3.9"
+
+services:
+
+  redis:
+    image: redis:7-alpine
+    container_name: gpu-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  monitor-pearl:
+    build:
+      context: ./monitors/pearl
+    container_name: monitor-pearl
+    restart: unless-stopped
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_TTL_SECONDS: ${PEARL_MONITOR_REDIS_TTL_SECONDS:-900}
+      POLL_INTERVAL: ${POLL_INTERVAL_PEARL:-5}
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./shared:/app/shared:ro
+      - ./data:/app/data
+
+  monitor-akoya:
+    build:
+      context: ./monitors/akoya
+    container_name: monitor-akoya
+    restart: unless-stopped
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      POLL_INTERVAL: ${POLL_INTERVAL_AKOYA:-5}
+      AKOYA_WALLET: ${AKOYA_WALLET}
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./shared:/app/shared:ro
+
+  monitor-alphamine:
+    build:
+      context: ./monitors/alphamine
+    container_name: monitor-alphamine
+    restart: unless-stopped
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      POLL_INTERVAL: ${POLL_INTERVAL_ALPHAMINE:-5}
+      ALPHAMINE_WALLET: ${ALPHAMINE_WALLET:-${AKOYA_WALLET}}
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./shared:/app/shared:ro
+
+  monitor-clore:
+    build:
+      context: ./monitors/clore
+    container_name: monitor-clore
+    restart: unless-stopped
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      POLL_INTERVAL: ${POLL_INTERVAL_CLORE:-30}
+      CLORE_API_KEY: ${CLORE_API_KEY:-}
+      CLORE_CURRENCY_ORDER: ${CLORE_CURRENCY_ORDER:-CLORE-Blockchain,USD-Blockchain,bitcoin}
+      CLORE_TOKEN_CONTRACT: ${CLORE_TOKEN_CONTRACT:-0xE60201989b8628F43dC0605f585a72Bcf1F1e977}
+      CLORE_TOKEN_PRICE_USD: ${CLORE_TOKEN_PRICE_USD:-}
+      BTC_PRICE_USD: ${BTC_PRICE_USD:-}
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./shared:/app/shared:ro
+
+  monitor-vastai:
+    build:
+      context: ./monitors/vastai
+    container_name: monitor-vastai
+    restart: unless-stopped
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      POLL_INTERVAL: ${POLL_INTERVAL_VASTAI:-5}
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./shared:/app/shared:ro
+
+  monitor-runpod:
+    build:
+      context: ./monitors/runpod
+    container_name: monitor-runpod
+    restart: unless-stopped
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      POLL_INTERVAL: ${POLL_INTERVAL_RUNPOD:-30}
+      RUNPOD_API_KEY: ${RUNPOD_API_KEY:-}
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./shared:/app/shared:ro
+
+  monitor-tensordock:
+    build:
+      context: ./monitors/tensordock
+    container_name: monitor-tensordock
+    restart: unless-stopped
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      POLL_INTERVAL: ${POLL_INTERVAL_TENSORDOCK:-30}
+      TENSORDOCK_API_KEY: ${TENSORDOCK_API_KEY:-}
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./shared:/app/shared:ro
+
+  dashboard:
+    build:
+      context: ./dashboard
+    container_name: gpu-dashboard
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      PEARL_FALLBACK_TTL_SECONDS: ${PEARL_FALLBACK_TTL_SECONDS:-900}
+      AKOYA_WALLET: ${AKOYA_WALLET}
+      ALPHAMINE_WALLET: ${ALPHAMINE_WALLET:-${AKOYA_WALLET}}
+      VAST_API_KEY: ${VAST_API_KEY:-}
+      VAST_TEMPLATE_HASH_ID: ${VAST_TEMPLATE_HASH_ID:-30d51b6172b6298e34e01b7bf6d4c7db}
+      VAST_AKOYA_TEMPLATE_HASH_ID: ${VAST_AKOYA_TEMPLATE_HASH_ID:-${VAST_TEMPLATE_HASH_ID:-30d51b6172b6298e34e01b7bf6d4c7db}}
+      VAST_ALPHAMINE_TEMPLATE_HASH_ID: ${VAST_ALPHAMINE_TEMPLATE_HASH_ID:-}
+      VAST_AKOYA_IMAGE: ${VAST_AKOYA_IMAGE:-registry.akoyapool.com/akoya-miner:latest}
+      VAST_ALPHAMINE_IMAGE: ${VAST_ALPHAMINE_IMAGE:-alphaminetech/pearl-miner:latest}
+      VAST_AKOYA_ARGS: ${VAST_AKOYA_ARGS:-}
+      VAST_ALPHAMINE_ARGS: ${VAST_ALPHAMINE_ARGS:-}
+      VAST_AKOYA_ONSTART: ${VAST_AKOYA_ONSTART:-}
+      VAST_ALPHAMINE_ONSTART: ${VAST_ALPHAMINE_ONSTART:-}
+      ALPHAMINE_POOL_HOST: ${ALPHAMINE_POOL_HOST:-us2.alphapool.tech}
+      ALPHAMINE_POOL_PORT: ${ALPHAMINE_POOL_PORT:-5566}
+      ALPHAMINE_DIFFICULTY: ${ALPHAMINE_DIFFICULTY:-}
+      VAST_AUTORENT_MODE: ${VAST_AUTORENT_MODE:-confirm}
+      VAST_MAX_ACTIVE_RENTS: ${VAST_MAX_ACTIVE_RENTS:-1}
+      VAST_MIN_ROI_PCT: ${VAST_MIN_ROI_PCT:-20}
+      VAST_MIN_PROFIT_DAY: ${VAST_MIN_PROFIT_DAY:-3}
+      VAST_INSTANCE_DISK_GB: ${VAST_INSTANCE_DISK_GB:-8}
+      VAST_OFFLINE_RESCUE_ENABLED: ${VAST_OFFLINE_RESCUE_ENABLED:-true}
+      VAST_OFFLINE_RESCUE_INTERVAL_SECONDS: ${VAST_OFFLINE_RESCUE_INTERVAL_SECONDS:-180}
+      VAST_OFFLINE_RESCUE_REGRAB_ENABLED: ${VAST_OFFLINE_RESCUE_REGRAB_ENABLED:-true}
+      CLORE_API_KEY: ${CLORE_API_KEY:-}
+      CLORE_CURRENCY_ORDER: ${CLORE_CURRENCY_ORDER:-CLORE-Blockchain,USD-Blockchain,bitcoin}
+      CLORE_AKOYA_IMAGE: ${CLORE_AKOYA_IMAGE:-registry.akoyapool.com/akoya-miner:latest}
+      CLORE_ALPHAMINE_IMAGE: ${CLORE_ALPHAMINE_IMAGE:-alphaminetech/pearl-miner:latest}
+      CLORE_AUTORENT_MODE: ${CLORE_AUTORENT_MODE:-confirm}
+      CLORE_ORDER_SYNC_INTERVAL_SECONDS: ${CLORE_ORDER_SYNC_INTERVAL_SECONDS:-60}
+      CLORE_RERENT_APPROVED_ENABLED: ${CLORE_RERENT_APPROVED_ENABLED:-true}
+      CLORE_RERENT_INTERVAL_SECONDS: ${CLORE_RERENT_INTERVAL_SECONDS:-180}
+      SCOUT_CLORE_AUTO_AB_ENABLED: ${SCOUT_CLORE_AUTO_AB_ENABLED:-false}
+      CLORE_MAX_RETRIES: ${CLORE_MAX_RETRIES:-6}
+      CLORE_RATE_LIMIT_BACKOFF_SECONDS: ${CLORE_RATE_LIMIT_BACKOFF_SECONDS:-2}
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./shared:/app/shared:ro
+      - ./data:/app/data
+
+  spheron-dashboard:
+    build:
+      context: ./spheron_dashboard
+    container_name: spheron-dashboard
+    restart: unless-stopped
+    ports:
+      - "8091:8091"
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      DATA_DIR: /app/data
+      SPHERON_SNIPER_STATE_PATH: /app/data/spheron_sniper_state.json
+      SPHERON_CONTROL_CONFIG_PATH: /app/data/spheron_control_config.json
+      FIXED_WORKER_COSTS_PATH: /app/data/fixed_worker_costs.json
+      SAFETRADE_COOKIE: ${SAFETRADE_COOKIE:-}
+      SAFETRADE_CF_CLEARANCE: ${SAFETRADE_CF_CLEARANCE:-}
+      SAFETRADE_API_KEY: ${SAFETRADE_API_KEY:-}
+      SAFETRADE_API_SECRET: ${SAFETRADE_API_SECRET:-}
+      SAFETRADE_BOOK_CACHE_PATH: ${SAFETRADE_BOOK_CACHE_PATH:-/app/data/safetrade_books_cache.json}
+      SAFETRADE_BOOK_CACHE_TTL_SECONDS: ${SAFETRADE_BOOK_CACHE_TTL_SECONDS:-30}
+      SAFETRADE_BOOK_STALE_SECONDS: ${SAFETRADE_BOOK_STALE_SECONDS:-600}
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./data:/app/data

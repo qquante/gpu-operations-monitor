@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pearl GPU Monitor - Results</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>Results</h1>
+          <p id="connection">Carregando...</p>
+        </div>
+        <nav class="top-nav">
+          <a class="rent-link" href="/">Dashboard</a>
+          <a class="rent-link search-link" href="/scout">Testes</a>
+          <a class="rent-link search-link" href="/results">Results</a>
+          <a class="rent-link search-link" href="/prime">Prime</a>
+          <a class="rent-link search-link" href="/config">Config</a>
+        </nav>
+      </header>
+
+      <section class="operation-grid" id="summaryCards"></section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Hosts lucrativos</h2>
+            <p>Hosts com historico acima do minimo; ofertas atuais aparecem abaixo sem furar o allowlist H100 SXM.</p>
+          </div>
+        </div>
+        <div class="table-wrap gpu-summary">
+          <table>
+            <thead>
+              <tr>
+                <th>Host</th>
+                <th>GPUs boas</th>
+                <th>Machines</th>
+                <th>Hits</th>
+                <th>Pool</th>
+                <th>Lucro medio/h</th>
+                <th>Melhor lucro/h</th>
+                <th>Preco visto</th>
+                <th>Ofertas atuais</th>
+                <th>H100 atuais</th>
+                <th>Melhor H100 atual</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="hostIntelRows"></tbody>
+          </table>
+        </div>
+        <div class="table-wrap gpu-summary">
+          <table>
+            <thead>
+              <tr>
+                <th>Host</th>
+                <th>Ask</th>
+                <th>GPU</th>
+                <th>Qtd</th>
+                <th>Machine</th>
+                <th>Preco/h</th>
+                <th>Lucro prev/h</th>
+                <th>PCIe</th>
+                <th>Rede</th>
+                <th>Status</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="hostIntelOfferRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Host 445596</h2>
+            <p>Ofertas atuais do host e historico lucrativo visto nesse mesmo host.</p>
+          </div>
+        </div>
+        <div class="table-wrap gpu-summary">
+          <table>
+            <thead>
+              <tr>
+                <th>Ask</th>
+                <th>GPU</th>
+                <th>Qtd</th>
+                <th>Machine</th>
+                <th>Preco/h</th>
+                <th>Lucro prev/h</th>
+                <th>PCIe</th>
+                <th>Rede</th>
+                <th>Status</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="hostOfferRows"></tbody>
+          </table>
+        </div>
+        <div class="table-wrap gpu-summary host-history">
+          <table>
+            <thead>
+              <tr>
+                <th>GPU</th>
+                <th>Qtd</th>
+                <th>Machine</th>
+                <th>Hits</th>
+                <th>Melhor pool</th>
+                <th>Melhor lucro/h</th>
+                <th>Preco/h</th>
+                <th>Ult. resultado</th>
+                <th>Ult. visto</th>
+              </tr>
+            </thead>
+            <tbody id="hostHistoryRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>GPUs lucrativas</h2>
+            <p>Modelos que ja deram lucro no Scout, com melhor oferta Vast atual quando existir.</p>
+          </div>
+        </div>
+        <div class="table-wrap gpu-summary">
+          <table>
+            <thead>
+              <tr>
+                <th>GPU</th>
+                <th>Hits</th>
+                <th>Hardwares</th>
+                <th>Melhor pool</th>
+                <th>Melhor lucro/h</th>
+                <th>Teto aprendido</th>
+                <th>Oferta atual</th>
+                <th>Status</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="gpuRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Padrões lucrativos</h2>
+            <p>Combina GPU, qtd, PCIe e host para achar outras ofertas parecidas que ja deram lucro.</p>
+          </div>
+        </div>
+        <div class="table-wrap gpu-summary">
+          <table>
+            <thead>
+              <tr>
+                <th>GPU</th>
+                <th>Qtd</th>
+                <th>PCIe</th>
+                <th>Host</th>
+                <th>Machines</th>
+                <th>Hits</th>
+                <th>Pool</th>
+                <th>Lucro medio/h</th>
+                <th>Melhor lucro/h</th>
+                <th>Preco visto</th>
+                <th>Rede</th>
+                <th>Oferta atual</th>
+                <th>Status</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="patternRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Hardwares lucrativos</h2>
+            <p>Maquinas especificas que ja foram boas, deduplicadas por machine/host/GPU/qtd.</p>
+          </div>
+        </div>
+        <div class="table-wrap gpu-summary">
+          <table>
+            <thead>
+              <tr>
+                <th>GPU</th>
+                <th>Qtd</th>
+                <th>Machine</th>
+                <th>Host</th>
+                <th>Hits</th>
+                <th>Melhor pool</th>
+                <th>Melhor lucro/h</th>
+                <th>Teto aprendido</th>
+                <th>Oferta atual</th>
+                <th>Status</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="hardwareRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Piores GPUs</h2>
+            <p>Modelos com historico ruim; blacklist bloqueia novas oportunidades Vast antes do Scout.</p>
+          </div>
+        </div>
+        <div class="table-wrap gpu-summary">
+          <table>
+            <thead>
+              <tr>
+                <th>GPU</th>
+                <th>Amostras</th>
+                <th>Ruins</th>
+                <th>Viaveis</th>
+                <th>Taxa ruim</th>
+                <th>Lucro medio/h</th>
+                <th>Pior lucro/h</th>
+                <th>Melhor lucro/h</th>
+                <th>Ult. visto</th>
+                <th>Motivo comum</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="worstGpuRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Fila Results</h2>
+            <p>Pedidos aguardando reaparecer na Vast; retry automatico a cada 5 min.</p>
+          </div>
+        </div>
+        <div class="table-wrap compact">
+          <table>
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Tipo</th>
+                <th>GPU</th>
+                <th>Qtd</th>
+                <th>Machine</th>
+                <th>Host</th>
+                <th>Tentativas</th>
+                <th>Prox retry</th>
+                <th>Erro</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="queueRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Ultimos resultados</h2>
+            <p>Historico recente do Scout para contexto rapido.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Fim</th>
+                <th>Ask</th>
+                <th>Instancia</th>
+                <th>Origem</th>
+                <th>GPU</th>
+                <th>Qtd</th>
+                <th>Pool</th>
+                <th>Preco/h</th>
+                <th>Hash</th>
+                <th>Ratio</th>
+                <th>Lucro/h</th>
+                <th>Decisao</th>
+                <th>Motivo</th>
+              </tr>
+            </thead>
+            <tbody id="historyRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script src="/static/results.js?v=20260529-auto-log"></script>
+  </body>
+</html>

@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pearl GPU Monitor - Prime</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>PRIME</h1>
+          <p id="connection">Carregando...</p>
+        </div>
+        <nav class="top-nav">
+          <a class="rent-link" href="/">Dashboard</a>
+          <a class="rent-link search-link" href="/scout">Testes</a>
+          <a class="rent-link search-link" href="/results">Results</a>
+          <a class="rent-link search-link" href="/prime">Prime</a>
+          <a class="rent-link search-link" href="/config">Config</a>
+        </nav>
+      </header>
+
+      <section class="operation-grid" id="summaryCards"></section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Agora</h2>
+            <p>Ofertas Vast atuais ordenadas por score PRIME.</p>
+          </div>
+        </div>
+        <div class="table-wrap gpu-summary">
+          <table>
+            <thead>
+              <tr>
+                <th>Score</th>
+                <th>Ask</th>
+                <th>GPU</th>
+                <th>Host</th>
+                <th>Machine</th>
+                <th>Preco/h</th>
+                <th>Akoya 2.1 Hash</th>
+                <th>Lucro Akoya/h</th>
+                <th>Historico</th>
+                <th>Fonte</th>
+                <th>Status</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="nowRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Akoya 2.1 Radar</h2>
+            <p>Simulacao com benchmarks Akoya Miner 2.1, sem alterar o banco global.</p>
+          </div>
+        </div>
+        <div class="table-wrap gpu-summary">
+          <table>
+            <thead>
+              <tr>
+                <th>GPU</th>
+                <th>Ask</th>
+                <th>Preco/h</th>
+                <th>Hash 2.1</th>
+                <th>Lucro/h</th>
+                <th>ROI</th>
+                <th>Confianca</th>
+                <th>Riscos</th>
+                <th>Status</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="radarRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Todas GPUs</h2>
+            <p>Mapa completo: benchmark Akoya 2.1, historico real e oferta Vast atual quando existir.</p>
+          </div>
+        </div>
+        <div class="table-wrap gpu-summary">
+          <table>
+            <thead>
+              <tr>
+                <th>GPU</th>
+                <th>Akoya 2.1 TH/s</th>
+                <th>Ofertas atuais</th>
+                <th>Melhor ask atual</th>
+                <th>Preco atual</th>
+                <th>Lucro atual/h</th>
+                <th>Melhor historico/h</th>
+                <th>Pool historico</th>
+                <th>Amostras</th>
+                <th>Status</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="gpuUniverseRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Secoes por GPU</h2>
+            <p>Cada modelo com ofertas Vast atuais, PCIe, rede, CUDA, confiabilidade, historico e acao manual.</p>
+          </div>
+        </div>
+        <div id="gpuSections" class="gpu-sections"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Reavaliar Piores</h2>
+            <p>Placas que podem mudar de categoria com Akoya 2.1.</p>
+          </div>
+        </div>
+        <div class="table-wrap gpu-summary">
+          <table>
+            <thead>
+              <tr>
+                <th>GPU</th>
+                <th>Ask</th>
+                <th>Preco/h</th>
+                <th>Lucro atual/h</th>
+                <th>Lucro Akoya/h</th>
+                <th>Fonte</th>
+                <th>Historico GPU</th>
+                <th>Status</th>
+                <th>Acao</th>
+              </tr>
+            </thead>
+            <tbody id="reevaluateRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Historico Real</h2>
+            <p>Hardwares lucrativos medidos pelo Scout/Results.</p>
+          </div>
+        </div>
+        <div class="table-wrap gpu-summary">
+          <table>
+            <thead>
+              <tr>
+                <th>GPU</th>
+                <th>Qtd</th>
+                <th>Machine</th>
+                <th>Host</th>
+                <th>Hits</th>
+                <th>Melhor pool</th>
+                <th>Melhor lucro/h</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="historyRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Hosts Premium</h2>
+            <p>Hosts Vast com lucro real acima do minimo e ofertas atuais.</p>
+          </div>
+        </div>
+        <div class="table-wrap gpu-summary">
+          <table>
+            <thead>
+              <tr>
+                <th>Host</th>
+                <th>GPUs boas</th>
+                <th>Machines</th>
+                <th>Hits</th>
+                <th>Pool</th>
+                <th>Lucro medio/h</th>
+                <th>Melhor lucro/h</th>
+                <th>Ofertas atuais</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="hostRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Fila / Blocked</h2>
+            <p>Itens Results aguardando retry, bloqueados ou em andamento.</p>
+          </div>
+        </div>
+        <div class="table-wrap compact">
+          <table>
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Tipo</th>
+                <th>GPU</th>
+                <th>Qtd</th>
+                <th>Machine</th>
+                <th>Host</th>
+                <th>Prox retry</th>
+                <th>Erro</th>
+              </tr>
+            </thead>
+            <tbody id="queueRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script src="/static/prime.js?v=20260529-prime-gpu-sections"></script>
+  </body>
+</html>

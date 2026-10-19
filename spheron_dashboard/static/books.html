@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRL Books</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>PRL Books</h1>
+          <p id="subtitle">somente Pearl Research PRL e WPRL</p>
+        </div>
+        <nav class="top-nav">
+          <a href="/">Spheron</a>
+          <a href="/books">Books PRL</a>
+        </nav>
+        <div class="status-pill" id="refreshStatus">carregando</div>
+      </header>
+
+      <section class="controls book-controls">
+        <form id="bookForm">
+          <label>
+            <span>Quantidades PRL</span>
+            <input name="amounts" value="10,100,1000" />
+          </label>
+          <button class="save" type="submit">Atualizar books</button>
+        </form>
+      </section>
+
+      <section class="metrics" id="bookMetrics"></section>
+
+      <section class="queue">
+        <div>
+          <h2>Como ler</h2>
+          <p id="notes">...</p>
+        </div>
+      </section>
+
+      <section class="table-wrap">
+        <div class="table-head">
+          <h2>Pearl Research PRL / WPRL</h2>
+          <div id="marketCount"></div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Mercado</th>
+              <th>Par</th>
+              <th>Status</th>
+              <th>Bid/Ask</th>
+              <th>Last</th>
+              <th>Vol 24h</th>
+              <th>Liquidez</th>
+              <th>Venda simulada</th>
+              <th>Profundidade</th>
+              <th>Nota</th>
+            </tr>
+          </thead>
+          <tbody id="markets"></tbody>
+        </table>
+      </section>
+    </main>
+    <script src="/static/books.js"></script>
+  </body>
+</html>
