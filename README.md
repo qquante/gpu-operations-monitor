@@ -1,78 +1,37 @@
 # GPU Operations Monitor
 
-**Worker status, provider observations and operational cost visibility.**
-
 ![Language: Python](https://img.shields.io/badge/Language-Python-3776AB?style=flat-square&logo=python) ![API: FastAPI](https://img.shields.io/badge/API-FastAPI-555555?style=flat-square) [![License: MIT](https://img.shields.io/badge/License-MIT-555555?style=flat-square)](LICENSE)
 
-[Overview](#overview) · [Quickstart](#quickstart) · [Example](#example) · [Validation](#validation) · [Documentation](#documentation)
+A FastAPI dashboard and provider-specific monitors for inspecting GPU workers, observations and operational costs across a mixed infrastructure stack.
 
-## Overview
+The repository contains adapters for Akoya, Alphamine, Clore, Pearl, RunPod, TensorDock and Vast.ai, plus a separate Spheron dashboard. They share monitoring/state helpers, but they are not one interchangeable provider API.
 
-A multi-service dashboard for GPU worker status, provider observations and operational cost tracking.
+## Pick the surface you need
 
-**Stack:** Python · FastAPI · httpx · Redis · JavaScript/HTML dashboards · Docker Compose
-
-## Observe infrastructure through explicit adapters
-
-| Component | Behavior |
+| Area | Role |
 | --- | --- |
-| Adapters | Provider/worker integrations feed shared monitoring code. |
-| State | Redis and local JSON retain observations used by dashboards. |
-| Operations | Cost and worker metadata support inspection of infrastructure state. |
+| [monitors](monitors) | Provider/workload polling adapters. |
+| [shared/base_monitor.py](shared/base_monitor.py) | Shared monitor behavior. |
+| [dashboard/app.py](dashboard/app.py) | Main dashboard API. |
+| [dashboard/state_store.py](dashboard/state_store.py) | Redis JSON access and local snapshot/archive helpers. |
+| [spheron_dashboard](spheron_dashboard) | Separate provider-oriented interface. |
 
-## Processing path
+Redis holds shared observations; local JSON files support snapshots and archives. A dashboard row is only as fresh as its underlying adapter, so missing/stale data must be interpreted separately from a healthy worker.
 
-```mermaid
-flowchart LR
-  N0["Provider/worker adapters"]
-  N1["shared monitor logic"]
-  N2["cached state"]
-  N3["FastAPI dashboards"]
-N0 --> N1 --> N2 --> N3
-```
-
-## Quickstart
+## Set up a bounded local inspection
 
 ```console
 python -m venv .venv
-# Activate .venv, then:
 python -m pip install -r dashboard/requirements.txt
-python -m compileall -q dashboard monitors
+python -m compileall -q dashboard monitors shared
 ```
 
-The commands above install prerequisites or run the specified offline checks. Live collection, cloud operations, messaging and trading are separate operational steps when present.
+Each monitor directory declares its own dependencies. Review [.env.example](.env.example) and the service definitions in [docker-compose.yml](docker-compose.yml) before selecting any services; starting the entire Compose stack is not necessary to read the dashboard implementation.
 
-## Example
+## Operational scope
 
-**Inspect the workflow**
+Some provider services contain provisioning or automation actions as well as observation code. Account credentials, Redis connectivity and workload configuration are operator inputs. No current provider pricing, live profitability, GPU allocation or behavioral test result is established by the syntax check above.
 
-Begin with [dashboard/app.py](dashboard/app.py) and the Compose service map. Identify which monitor supplies an observation, where it is cached and how the dashboard reads it. A missing or stale observation should remain distinguishable from a healthy worker. Source compilation does not allocate a cloud machine.
+**Technology:** Python · FastAPI · httpx · Redis · JavaScript/HTML dashboards · Docker Compose
 
-## Configuration and storage
-
-Dependencies are scoped to individual monitor/dashboard directories. [.env.example](.env.example) documents provider keys, Redis, polling intervals and optional automation settings. Review [docker-compose.yml](docker-compose.yml) before selecting services.
-
-## Repository guide
-
-| Location | Responsibility |
-| --- | --- |
-| [dashboard/app.py](dashboard/app.py) | Dashboard API |
-| [dashboard/state_store.py](dashboard/state_store.py) | Dashboard state |
-| [monitors](monitors) | Provider-specific monitors |
-| [docker-compose.yml](docker-compose.yml) | Service composition |
-
-## Validation
-
-The quickstart lists the declared checks. No passing CI or coverage claim is implied by the technology badges.
-
-## Scope and operational boundaries
-
-Some adapters include provisioning and other operational actions. Dashboard inspection does not imply approval to start the full stack. Provider rates, availability and cost figures require current provider verification.
-
-## Documentation
-
-- The repository guide above links directly to the implementation and configuration files.
-
-## License and attribution
-
-Project-authored source code is licensed under the [MIT License](LICENSE). Third-party components and datasets retain their respective rights and licenses.
+Project-authored source: [MIT](LICENSE). Third-party components retain their own notices and terms.
